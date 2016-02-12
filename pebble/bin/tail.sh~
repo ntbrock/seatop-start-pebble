@@ -1,0 +1,5 @@
+#!/bin/sh
+pebble logs --phone 192.168.1.2
+#pebble logs --phone 192.168.1.3
+
+

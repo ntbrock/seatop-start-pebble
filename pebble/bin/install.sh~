@@ -1,0 +1,4 @@
+#!/bin/sh
+pebble clean && pebble build && pebble install --phone 192.168.1.2
+
+#pebble clean && pebble build && pebble install --phone 10.1.51.223

@@ -1,0 +1,19 @@
+{
+  "uuid": "83199abd-9890-446f-9b92-a5732cabfdda",
+  "shortName": "SeaTop Start",
+  "longName": "SeaTop Start",
+  "companyName": "SeaTop",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite"],
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  },
+  "capabilities": []
+}
