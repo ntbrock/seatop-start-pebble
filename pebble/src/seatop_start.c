@@ -14,7 +14,7 @@ static Window *s_menu_window;
 static MenuLayer *s_menu_layer;
 
 #define INITIAL_SECONDS 300
-// #define INITIAL_SECONDS 65 // Quick Testing 
+//#define INITIAL_SECONDS 65 // Quick Testing 
 
 static int s_remaining_seconds = INITIAL_SECONDS;
 static int s_in_sequence = 0;
@@ -102,7 +102,7 @@ static void vibe_if_needed(int minutes, int seconds ) {
   
   } else if ( minutes == 0 && seconds != 0 && seconds <= 5 ) { 
 
-    uint32_t segments[] = { 50 };
+    uint32_t segments[] = { 100 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -113,7 +113,7 @@ static void vibe_if_needed(int minutes, int seconds ) {
 
   } else if ( minutes == 0 && seconds == 0 ) { 
 
-    uint32_t segments[] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+    uint32_t segments[] = { 1000, 100, 1000, 100, 1000 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -228,13 +228,19 @@ static void complete_sequence() {
 static void on_select_click(ClickRecognizerRef recognizer, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "on_select_click");
 
-  // resume or pause countdown
-  if ( s_in_sequence ) { 
-    pause_sequence();
+  if ( s_remaining_seconds <= 0 ) { 
+    reset_sequence();
   } else { 
-    // Begin 
-    resume_sequence();
-  } 
+
+    // resume or pause countdown
+    if ( s_in_sequence ) { 
+      pause_sequence();
+    } else { 
+      // Begin 
+      resume_sequence();
+    } 
+  }
+
 
 }
 
