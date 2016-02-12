@@ -11,7 +11,7 @@ Press Select to start clock
 
 Long Press + Release select to restart clock
 
-Press up or down to jump to the nearest minute to correct offset
+Press up or down to jump to the nearest minute to correct offset. Remember that light, sound, and gravity waves travel at different speeds depending on the medium!
 
 ## Screenshots
 
