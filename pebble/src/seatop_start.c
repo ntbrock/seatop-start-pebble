@@ -30,15 +30,81 @@ static void complete_sequence();
 
 static void vibe_if_needed(int minutes, int seconds ) {
 
-  if ( minutes == 4 && seconds == 0 ) { 
+  if ( seconds == 30 || seconds == 45 || seconds == 15) { 
 
+    uint32_t segments[] = { 100 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+
+    vibes_enqueue_custom_pattern(pattern);
+  
+  } else if ( minutes == 5 && seconds == 0 ) { 
+    
+    uint32_t segments[] = { 500 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+    vibes_enqueue_custom_pattern(pattern);
+
+  } else if ( minutes == 4 && seconds == 0 ) { 
+    
+    uint32_t segments[] = { 500, 200, 200, 200 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+    vibes_enqueue_custom_pattern(pattern);
+    
   } else if ( minutes == 3 && seconds == 0 ) { 
+
+    uint32_t segments[] = { 500, 200, 200 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+    vibes_enqueue_custom_pattern(pattern);
 
   } else if ( minutes == 2 && seconds == 0 ) { 
 
+    uint32_t segments[] = { 500, 200 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+    vibes_enqueue_custom_pattern(pattern);
+
   } else if ( minutes == 1 && seconds == 0 ) { 
 
+    uint32_t segments[] = { 500 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+    vibes_enqueue_custom_pattern(pattern);
+
+    // final count down
+  } else if ( minutes == 0 && seconds != 0 && ( seconds == 10 || seconds <= 5 ) ) { 
+
+    uint32_t segments[] = { 100 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+
+    vibes_enqueue_custom_pattern(pattern);
+  
+
   } else if ( minutes == 0 && seconds == 0 ) { 
+
+    uint32_t segments[] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+    vibes_enqueue_custom_pattern(pattern);
 
   } 
 
@@ -214,7 +280,7 @@ static void on_main_window_load(Window *window) {
 
   text_layer_set_background_color(s_text_layer, GColorClear);
   text_layer_set_text_color(s_text_layer, GColorLightGray);
-  text_layer_set_text(s_text_layer, "SeaTop Race");
+  text_layer_set_text(s_text_layer, "SeaTop Start");
   text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
   text_layer_set_font(s_text_layer, fonts_get_system_font( FONT_KEY_ROBOTO_CONDENSED_21 ));
 
