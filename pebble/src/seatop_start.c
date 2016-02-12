@@ -14,6 +14,7 @@ static Window *s_menu_window;
 static MenuLayer *s_menu_layer;
 
 #define INITIAL_SECONDS 300
+// #define INITIAL_SECONDS 65 // Quick Testing 
 
 static int s_remaining_seconds = INITIAL_SECONDS;
 static int s_in_sequence = 0;
@@ -40,7 +41,7 @@ static void vibe_if_needed(int minutes, int seconds ) {
 
     vibes_enqueue_custom_pattern(pattern);
   
-  } else if ( minutes == 5 && seconds == 0 ) { 
+  } else if ( minutes == 4 && seconds == 59 ) { 
     
     uint32_t segments[] = { 500 };
     VibePattern pattern = { 
@@ -51,7 +52,8 @@ static void vibe_if_needed(int minutes, int seconds ) {
 
   } else if ( minutes == 4 && seconds == 0 ) { 
     
-    uint32_t segments[] = { 500, 200, 200, 200 };
+    //                       1         2         3         4
+    uint32_t segments[] = { 250, 150, 250, 150, 250, 150, 250, 150 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -60,7 +62,8 @@ static void vibe_if_needed(int minutes, int seconds ) {
     
   } else if ( minutes == 3 && seconds == 0 ) { 
 
-    uint32_t segments[] = { 500, 200, 200 };
+    //                       1         2         3      
+    uint32_t segments[] = { 250, 150, 250, 150, 250, 150 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -69,7 +72,8 @@ static void vibe_if_needed(int minutes, int seconds ) {
 
   } else if ( minutes == 2 && seconds == 0 ) { 
 
-    uint32_t segments[] = { 500, 200 };
+    //                       1         2              
+    uint32_t segments[] = { 250, 150, 250, 150 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -85,10 +89,20 @@ static void vibe_if_needed(int minutes, int seconds ) {
     };
     vibes_enqueue_custom_pattern(pattern);
 
-    // final count down
-  } else if ( minutes == 0 && seconds != 0 && ( seconds == 10 || seconds <= 5 ) ) { 
+    // final count down // 10 SECONDS
+  } else if ( minutes == 0 && seconds == 10 ) { 
 
-    uint32_t segments[] = { 100 };
+    uint32_t segments[] = { 500 };
+    VibePattern pattern = { 
+      .durations = segments,
+      .num_segments = ARRAY_LENGTH(segments)
+    };
+
+    vibes_enqueue_custom_pattern(pattern);
+  
+  } else if ( minutes == 0 && seconds != 0 && seconds <= 5 ) { 
+
+    uint32_t segments[] = { 50 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -99,7 +113,7 @@ static void vibe_if_needed(int minutes, int seconds ) {
 
   } else if ( minutes == 0 && seconds == 0 ) { 
 
-    uint32_t segments[] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+    uint32_t segments[] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
     VibePattern pattern = { 
       .durations = segments,
       .num_segments = ARRAY_LENGTH(segments)
@@ -137,7 +151,7 @@ static void update_time(struct tm *on_tick_time) {
 
     // Vibe handles completeion vibe as well
     vibe_if_needed(minutes, seconds);
-    if ( s_remaining_seconds <= 0 ) { complete_sequence(); }
+    if ( s_remaining_seconds < 0 ) { complete_sequence(); }
 
   }
 
@@ -204,6 +218,7 @@ static void complete_sequence() {
   text_layer_set_text_color(s_second_layer, GColorBlack);
 
   s_in_sequence = 0;
+  s_remaining_seconds = 0;
 } 
 
 
@@ -232,6 +247,15 @@ static void on_select_long_click(ClickRecognizerRef recognizer, void *context) {
 static void on_up_click(ClickRecognizerRef recognizer, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "on_up_click");
 
+  // go to the nearest minute outside of 30 sec
+  if ( s_remaining_seconds > 30 ) { 
+
+    if ( s_remaining_seconds % 60 >= 30 ) { 
+      s_remaining_seconds = ( (int)( s_remaining_seconds / 60.0 ) + 1 ) * 60;
+    } else if ( s_remaining_seconds % 60 <= 30 ) { 
+      s_remaining_seconds = ( (int)( s_remaining_seconds / 60.0 )) * 60;
+    }
+  }
 }
 
 static void on_down_click(ClickRecognizerRef recognizer, void *context) {
@@ -289,7 +313,7 @@ static void on_main_window_load(Window *window) {
   // Create the Minute Layer with specific bounds
 
   int padX = 5;
-  int secPadX = 10;
+  int secPadX = 5;
   int padY = 60;
   int height = 60;
 
