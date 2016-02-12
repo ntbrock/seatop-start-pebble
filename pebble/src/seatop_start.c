@@ -13,7 +13,7 @@ static TextLayer *s_second_layer;
 static Window *s_menu_window;
 static MenuLayer *s_menu_layer;
 
-#define INITIAL_SECONDS 300;
+#define INITIAL_SECONDS 300
 
 static int s_remaining_seconds = INITIAL_SECONDS;
 static int s_in_sequence = 0;
@@ -44,16 +44,18 @@ static void vibe_if_needed(int minutes, int seconds ) {
 
 }
 
+static void update_time(struct tm *on_tick_time) {
 
-static void update_time() {
-  // Get a tm structure
   time_t temp = time(NULL);
-  struct tm *tick_time = localtime(&temp);
+  struct tm * tick_time = localtime(&temp);
 
+  // struct tm * tick_time = &temp;
+  
+   
   // Write the current hours and minutes into a buffer
-  static char s_buffer[8];
-  strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?
-           "%H:%M:%s" : "%I:%M:%S", tick_time);
+  static char s_buffer[12];
+  strftime(s_buffer, sizeof(s_buffer), "%T", tick_time);
+
 
   // Display this time on the TextLayer
   text_layer_set_text(s_time_layer, s_buffer);
@@ -94,6 +96,12 @@ static void resume_sequence() {
   text_layer_set_background_color(s_second_layer, GColorBlack);
   text_layer_set_text_color(s_second_layer, GColorWhite);
 
+  // Handle the first click
+  if ( s_remaining_seconds == INITIAL_SECONDS ) {
+    s_remaining_seconds--;
+  }
+
+
   s_in_sequence = 1;
   // update_time();  Doing update time here causes to fast of a second loss
 } 
@@ -105,8 +113,9 @@ static void pause_sequence() {
   text_layer_set_background_color(s_second_layer, GColorBlack);
   text_layer_set_text_color(s_second_layer, GColorLightGray);
 
+  s_remaining_seconds++; // ad a second back to clock
   s_in_sequence = 0;
-  // update_time();
+  update_time(0);
 }
 
 static void reset_sequence() { 
@@ -118,7 +127,7 @@ static void reset_sequence() {
 
   s_remaining_seconds = INITIAL_SECONDS;
   s_in_sequence = 0;
-  update_time();
+  update_time(0);
 } 
 
 static void complete_sequence() { 
@@ -173,7 +182,7 @@ static void main_click_config_provider(void *context) {
 
 
 static void on_tick(struct tm *tick_time, TimeUnits units_changed) {
-  update_time();
+  update_time(tick_time);
 }
 
 
@@ -214,6 +223,7 @@ static void on_main_window_load(Window *window) {
   // Create the Minute Layer with specific bounds
 
   int padX = 5;
+  int secPadX = 10;
   int padY = 60;
   int height = 60;
 
@@ -222,14 +232,14 @@ static void on_main_window_load(Window *window) {
   text_layer_set_text_alignment(s_minute_layer, GTextAlignmentCenter);
   text_layer_set_font(s_minute_layer, fonts_get_system_font( FONT_KEY_LECO_42_NUMBERS ));
 
-  s_second_layer = text_layer_create( GRect(bounds.size.w / 2 , padY, bounds.size.w / 2 - padX, height ));
+  s_second_layer = text_layer_create( GRect(bounds.size.w / 2 , padY, bounds.size.w / 2 - secPadX, height ));
   text_layer_set_text(s_second_layer, "--");
   text_layer_set_text_alignment(s_second_layer, GTextAlignmentCenter);
   text_layer_set_font(s_second_layer, fonts_get_system_font( FONT_KEY_LECO_42_NUMBERS ));
 
   // Ensure time is latest.
   reset_sequence();
-  update_time();
+  update_time(0);
 
 
   // End Time Layer Setup
