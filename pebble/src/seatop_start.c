@@ -260,6 +260,8 @@ static void on_up_click(ClickRecognizerRef recognizer, void *context) {
 
 static void on_down_click(ClickRecognizerRef recognizer, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "on_down_click");
+
+  on_up_click(recognizer, context);
 }
 
 static void main_click_config_provider(void *context) {
