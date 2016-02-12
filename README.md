@@ -15,9 +15,9 @@ Press up or down to jump to the nearest minute to correct offset
 
 ## Screenshots
 
-[Pre Sequence](/screenshots/pebble_screenshot_2016-02-12_00-31-39.png?raw=true "Pre Sequence")
+![Pre Sequence](/screenshots/pebble_screenshot_2016-02-12_00-31-39.png?raw=true "Pre Sequence")
 
-[In Sequence](/screenshots/pebble_screenshot_2016-02-12_00-32-02.png?raw=true "In Sequence")
+![In Sequence](/screenshots/pebble_screenshot_2016-02-12_00-32-02.png?raw=true "In Sequence")
 
 
 ## Version 2 Wishlist
